@@ -1,0 +1,41 @@
+services:
+  avito-assignment-2025:
+    build: .
+    container_name: avito_assignment
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=admin
+      - DATABASE_NAME=avito_assignment
+      - DATABASE_HOST=postgres
+      - SERVER_PORT=8080
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: avito_assignment
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres -d avito_assignment'"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./migrations/up:/docker-entrypoint-initdb.d
+    networks:
+      - internal
+
+networks:
+  internal:

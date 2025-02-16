@@ -1,0 +1,7 @@
+DROP TABLE users CASCADE;
+
+DROP TABLE transactions CASCADE;
+
+DROP TABLE item CASCADE;
+
+DROP TABLE purchases CASCADE;
